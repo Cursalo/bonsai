@@ -1,8 +1,0 @@
-{
-  "name": "netlify-nextjs-build-helper",
-  "version": "1.0.0",
-  "description": "Helper plugin for building Next.js sites on Netlify",
-  "main": "index.js",
-  "author": "Your Name",
-  "license": "MIT"
-} 
