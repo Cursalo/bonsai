@@ -1,6 +1,6 @@
 'use client'
 
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useState, useEffect } from 'react'
 
 type Subscription = {
@@ -16,7 +16,7 @@ export default function SubscriptionInfo() {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createSupabaseClient()
+  const supabase = createClient()
 
   useEffect(() => {
     const fetchSubscription = async () => {

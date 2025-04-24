@@ -1,6 +1,6 @@
 'use client'
 
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useState } from 'react'
 
 type CreditPackage = {
@@ -16,7 +16,7 @@ export default function PurchaseCredits() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const supabase = createSupabaseClient()
+  const supabase = createClient()
 
   // Credit packages available for purchase
   const creditPackages: CreditPackage[] = [

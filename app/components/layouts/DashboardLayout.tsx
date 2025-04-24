@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import ThemeToggle from '@/app/components/ThemeToggle'
+import ThemeToggle from '../ThemeToggle'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 interface DashboardLayoutProps {
@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const supabase = createSupabaseClient()
+  const supabase = createClient()
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },

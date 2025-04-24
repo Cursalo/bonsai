@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 
 type VideoLesson = {
   id: string
@@ -26,7 +26,7 @@ export default function VideoList() {
   const [videos, setVideos] = useState<VideoLesson[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const supabase = createSupabaseClient()
+  const supabase = createClient()
 
   useEffect(() => {
     const fetchVideos = async () => {
