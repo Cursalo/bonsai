@@ -1,20 +1,24 @@
 'use client'
 
-import { useState, ReactNode } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { supabase } from '@/app/lib/supabase'
+import { createSupabaseClient } from '@/app/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import ThemeToggle from '@/app/components/ThemeToggle'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 interface DashboardLayoutProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const supabase = createSupabaseClient()
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
@@ -24,9 +28,21 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: 'Subscription', href: '/subscription', icon: '💳' },
   ]
 
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        setUserEmail(user.email || null)
+      } else {
+        router.push('/login')
+      }
+    }
+    getUser()
+  }, [supabase, router])
+
   const handleSignOut = async () => {
     await supabase.auth.signOut()
-    router.push('/')
+    router.push('/login')
     router.refresh()
   }
 

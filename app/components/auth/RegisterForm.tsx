@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { supabase } from '@/app/lib/supabase'
+import { createSupabaseClient } from '@/app/lib/supabase/client'
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -23,6 +23,7 @@ export default function RegisterForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const supabase = createSupabaseClient()
 
   const {
     register,
@@ -37,40 +38,23 @@ export default function RegisterForm() {
     setError(null)
 
     try {
-      // Register the user with Supabase Auth
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
-          data: {
-            name: data.name,
-          },
+          // Optionally add email redirect URL or other options
+          // emailRedirectTo: `${location.origin}/auth/callback`,
         },
       })
 
-      if (signUpError) {
-        throw signUpError
+      if (error) {
+        throw error
       }
 
-      // Create a user profile in the database
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert({
-          id: (await supabase.auth.getUser()).data.user?.id,
-          email: data.email,
-          name: data.name,
-          created_at: new Date().toISOString(),
-          last_login: new Date().toISOString(),
-          preferred_language: 'en',
-        })
-
-      if (profileError) {
-        throw profileError
-      }
-
-      // Redirect to the dashboard
-      router.push('/dashboard')
+      // Redirect to login or a confirmation page
+      router.push('/login?message=Check email to continue sign in process')
       router.refresh()
+
     } catch (error: any) {
       setError(error.message || 'An error occurred during registration')
     } finally {

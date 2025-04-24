@@ -1,7 +1,7 @@
 'use client'
 
+import { createSupabaseClient } from '@/app/lib/supabase/client'
 import { useState, useEffect } from 'react'
-import { supabase } from '@/app/lib/supabase'
 
 type Subscription = {
   id: string
@@ -14,38 +14,36 @@ type Subscription = {
 
 export default function SubscriptionInfo() {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const supabase = createSupabaseClient()
 
   useEffect(() => {
-    async function fetchSubscription() {
+    const fetchSubscription = async () => {
+      setLoading(true)
+      setError(null)
       try {
         const { data: { user } } = await supabase.auth.getUser()
-        
-        if (!user) {
-          throw new Error('User not authenticated')
-        }
+        if (!user) throw new Error("User not logged in")
 
-        const { data, error } = await supabase
+        const { data, error: fetchError } = await supabase
           .from('subscriptions')
-          .select('*')
+          .select('*, subscription_plans(*)')
           .eq('user_id', user.id)
-          .single()
-
-        if (error && error.code !== 'PGRST116') { // PGRST116 is the error code for no rows returned
-          throw error
-        }
-
+          .maybeSingle()
+        
+        if (fetchError) throw fetchError
+        
         setSubscription(data)
-      } catch (error: any) {
-        setError(error.message || 'Failed to load subscription information')
+      } catch (err: any) {
+        setError(err.message || "Failed to load subscription data")
       } finally {
-        setIsLoading(false)
+        setLoading(false)
       }
     }
 
     fetchSubscription()
-  }, [])
+  }, [supabase])
 
   // Format date to a more readable format
   const formatDate = (dateString: string) => {
@@ -71,7 +69,7 @@ export default function SubscriptionInfo() {
     }
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="animate-pulse space-y-4">
         <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>

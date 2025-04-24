@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { supabase } from '@/app/lib/supabase'
+import { createSupabaseClient } from '@/app/lib/supabase/client'
 
 type VideoLesson = {
   id: string
@@ -26,9 +26,12 @@ export default function VideoList() {
   const [videos, setVideos] = useState<VideoLesson[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const supabase = createSupabaseClient()
 
   useEffect(() => {
-    async function fetchVideoLessons() {
+    const fetchVideos = async () => {
+      setIsLoading(true)
+      setError(null)
       try {
         const { data: { user } } = await supabase.auth.getUser()
         
@@ -47,22 +50,20 @@ export default function VideoList() {
           query = query.eq('submission_id', homeworkId)
         }
 
-        const { data, error } = await query
+        const { data, error: fetchError } = await query
 
-        if (error) {
-          throw error
-        }
+        if (fetchError) throw fetchError
 
         setVideos(data || [])
-      } catch (error: any) {
-        setError(error.message || 'Failed to load video lessons')
+      } catch (err: any) {
+        setError(err.message || "Failed to load videos")
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchVideoLessons()
-  }, [homeworkId])
+    fetchVideos()
+  }, [homeworkId, supabase])
 
   // Format date to a more readable format
   const formatDate = (dateString: string) => {
