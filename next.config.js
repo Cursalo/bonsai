@@ -28,7 +28,6 @@ const nextConfig = {
     },
   },
   // Add these for better Netlify compatibility
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
