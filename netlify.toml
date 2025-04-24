@@ -14,7 +14,7 @@
   package = "@netlify/plugin-nextjs"
   
 [[plugins]]
-  package = "./netlify"
+  package = "plugins/netlify-build-plugin"
 
 [functions]
   node_bundler = "esbuild"
