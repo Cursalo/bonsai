@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import DashboardLayout from '../components/layouts/DashboardLayout'
-import { createSupabaseServerClient } from '../lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 
 // Mock function to get all videos
 async function getAllVideos() {
-  const supabase = await createSupabaseServerClient()
+  const supabase = await createClient()
 
   const { data: videos, error } = await supabase.from('video_lessons').select('*')
 
