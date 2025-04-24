@@ -1,9 +1,8 @@
 [build]
   command = "./build.sh"
-  publish = "dist"
+  publish = ".next"
   
 [build.environment]
-  NETLIFY_NEXT_PLUGIN_SKIP = "true"
   NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
   NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key"
 
