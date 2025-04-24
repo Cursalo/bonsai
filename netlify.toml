@@ -13,5 +13,25 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
   
+[[plugins]]
+  package = "./netlify"
+
 [functions]
-  node_bundler = "esbuild" 
+  node_bundler = "esbuild"
+  
+[dev]
+  framework = "next"
+  
+[build.processing]
+  skip_processing = false
+  
+[build.processing.css]
+  bundle = true
+  minify = true
+  
+[build.processing.js]
+  bundle = true
+  minify = true
+  
+[build.processing.images]
+  compress = true 

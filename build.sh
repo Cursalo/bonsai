@@ -2,6 +2,11 @@
 
 echo "Starting build process..."
 
+# Run dependency check
+echo "Running dependency check..."
+chmod +x ./check_deps.sh
+./check_deps.sh
+
 # Skip pip update - no longer needed
 # echo "Updating pip..."
 # pip install --upgrade pip
@@ -9,6 +14,9 @@ echo "Starting build process..."
 # Display environment info
 echo "Node version: $(node -v)"
 echo "NPM version: $(npm -v)"
+
+# Ensure public directory exists
+mkdir -p public
 
 # Install npm dependencies with clean cache and legacy peer deps
 echo "Installing npm dependencies..."
