@@ -4,6 +4,8 @@
   
 [build.environment]
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+  NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key"
 
 [functions]
   included_files = ["dist/server/**", "dist/_next/static/**"]
