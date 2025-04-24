@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { createSupabaseClient } from '../../lib/supabase/client'
+import { createSupabaseClient } from '@/app/lib/supabase/client'
 
 type VideoLesson = {
   id: string

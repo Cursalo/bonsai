@@ -1,6 +1,6 @@
 'use client'
 
-import { createSupabaseClient } from '../../lib/supabase/client'
+import { createSupabaseClient } from '@/app/lib/supabase/client'
 import { useState } from 'react'
 
 type CreditPackage = {
