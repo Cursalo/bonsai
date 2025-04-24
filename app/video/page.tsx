@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import DashboardLayout from '@/app/components/layouts/DashboardLayout'
-import { createSupabaseServerClient } from '@/app/lib/supabase/server'
+import DashboardLayout from '../components/layouts/DashboardLayout'
+import { createSupabaseServerClient } from '../lib/supabase/server'
 
 // Mock function to get all videos
 async function getAllVideos() {

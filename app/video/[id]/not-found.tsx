@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import DashboardLayout from '@/app/components/layouts/DashboardLayout'
+import DashboardLayout from '../../components/layouts/DashboardLayout'
 
 export default function VideoNotFound() {
   return (
