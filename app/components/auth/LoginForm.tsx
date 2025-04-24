@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createSupabaseClient } from '../../lib/supabase/client'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),

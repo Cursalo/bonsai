@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createSupabaseClient } from '../../lib/supabase/client'
 
 const homeworkSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),

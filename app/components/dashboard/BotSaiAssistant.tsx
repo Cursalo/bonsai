@@ -1,13 +1,22 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { generateBotSaiResponse } from '@/app/lib/botsai'
+// import { generateBotSaiResponse } from '@/app/lib/botsai' // TEMP: Commented out due to missing module
 import { motion, AnimatePresence } from 'framer-motion'
 
+// Add a basic Message type definition
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export default function BotSaiAssistant() {
-  const [prompt, setPrompt] = useState('')
-  const [response, setResponse] = useState('')
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: "Hi! I'm BotSai, your AI tutor assistant. Ask me anything about your studies!" }
+  ])
+  const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const messagesEndRef = useRef<null | HTMLDivElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -19,31 +28,33 @@ export default function BotSaiAssistant() {
       textareaRef.current.style.height = 'auto'
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
     }
-  }, [prompt])
+  }, [input])
 
   // Scroll to response when it's generated
   useEffect(() => {
-    if (response && responseRef.current) {
-      responseRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    if (messages.length > 0 && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }
-  }, [response])
+  }, [messages])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!prompt.trim()) return
-    
+    if (!input.trim()) return
+
+    const userMessage: Message = { role: 'user', content: input }
+    setMessages((prev) => [...prev, userMessage])
+    setInput('')
     setIsLoading(true)
-    setError(null)
-    
+
     try {
-      // Add SAT/PSAT context to the prompt
-      const enhancedPrompt = `As an SAT/PSAT tutor, please help with the following question: ${prompt}`;
-      const result = await generateBotSaiResponse(enhancedPrompt)
-      setResponse(result)
-    } catch (err: any) {
-      setError(err.message || 'Failed to generate response')
-      console.error('BotSai API error:', err)
+      // TEMP: Replace actual call with placeholder/mock response
+      // const botResponse = await generateBotSaiResponse(input, messages.slice(0, -1)) // Pass previous messages for context
+      const botResponse = "I am currently under development. Please check back later!"
+      
+      setMessages((prev) => [...prev, { role: 'assistant', content: botResponse }])
+    } catch (error) {
+      console.error('Error getting BotSai response:', error)
+      setMessages((prev) => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
     } finally {
       setIsLoading(false)
     }
@@ -74,7 +85,7 @@ export default function BotSaiAssistant() {
           </h2>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSendMessage} className="space-y-5">
           <div>
             <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Ask anything about SAT or PSAT prep
@@ -88,16 +99,16 @@ export default function BotSaiAssistant() {
                   rows={3}
                   className={`botsai-input botsai-scrollbar ${isFocused ? 'animate-pulse-border' : ''}`}
                   placeholder="e.g., How do I solve systems of equations? What's the best way to approach the reading section?"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                 />
-                {prompt && (
+                {input && (
                   <button 
                     type="button" 
                     className="absolute top-2 right-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
-                    onClick={() => setPrompt('')}
+                    onClick={() => setInput('')}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -117,7 +128,7 @@ export default function BotSaiAssistant() {
                 type="button"
                 className="text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-full px-3 py-1.5 transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5"
                 onClick={() => {
-                  setPrompt(question)
+                  setInput(question)
                   if (textareaRef.current) {
                     textareaRef.current.focus()
                   }
@@ -131,7 +142,7 @@ export default function BotSaiAssistant() {
           <div>
             <motion.button
               type="submit"
-              disabled={isLoading || !prompt.trim()}
+              disabled={isLoading || !input.trim()}
               className={`w-full ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'botsai-button'}`}
               whileTap={{ scale: 0.98 }}
             >
@@ -162,42 +173,6 @@ export default function BotSaiAssistant() {
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
               {error}
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        <AnimatePresence>
-          {response && (
-            <motion.div 
-              ref={responseRef}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mt-6"
-            >
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-primary-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-                </svg>
-                SAT/PSAT Tutor Response:
-              </h3>
-              <div className="bg-gray-50 dark:bg-gray-900 p-5 rounded-lg text-gray-800 dark:text-gray-200 text-sm whitespace-pre-wrap border border-gray-200 dark:border-gray-700 shadow-inner botsai-scrollbar" style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                {response}
-              </div>
-              <div className="mt-3 flex justify-end">
-                <button 
-                  onClick={() => {
-                    navigator.clipboard.writeText(response);
-                    // You could add a toast notification here
-                  }}
-                  className="text-xs flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                  Copy to clipboard
-                </button>
-              </div>
             </motion.div>
           )}
         </AnimatePresence>
