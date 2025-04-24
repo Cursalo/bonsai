@@ -1,5 +1,5 @@
 [build]
-  command = "pip install --upgrade pip && npm run build"
+  command = "./build.sh"
   publish = "dist"
   
 [build.environment]
