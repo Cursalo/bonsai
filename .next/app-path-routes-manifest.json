@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/homework/page": "/homework",
+  "/homework/new/page": "/homework/new",
+  "/login/page": "/login",
+  "/dashboard/page": "/dashboard",
+  "/page": "/",
+  "/register/page": "/register",
+  "/subscription/page": "/subscription",
+  "/progress/page": "/progress",
+  "/video/page": "/video",
+  "/video/[id]/page": "/video/[id]"
+}

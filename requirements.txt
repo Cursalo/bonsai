@@ -1,0 +1,6 @@
+Flask
+Flask-SQLAlchemy
+Flask-Migrate
+python-dotenv
+openai>=1.0.0
+# Add other dependencies here as needed 

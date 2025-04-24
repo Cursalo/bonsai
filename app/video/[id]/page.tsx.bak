@@ -1,0 +1,195 @@
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
+import DashboardLayout from '@/app/components/layouts/DashboardLayout'
+import { createSupabaseServerClient } from '@/app/lib/supabase/server'
+
+// Use correct Next.js types for Page props
+interface PageProps {
+  params: { id: string }
+  searchParams?: { [key: string]: string | string[] | undefined }
+}
+
+// Get video by ID
+async function getVideoById(id: string) {
+  const supabase = await createSupabaseServerClient();
+  // Fetch single video by id from 'video_lessons' table
+  const { data: video, error } = await supabase
+    .from('video_lessons') 
+    .select('*')
+    .eq('id', id)
+    .single(); 
+
+  if (error) {
+    console.error('Error fetching video by id:', error);
+    return null; 
+  }
+  return video; 
+}
+
+// Get related videos based on subject
+async function getRelatedVideos(currentVideoId: string, subject: string) {
+  const supabase = await createSupabaseServerClient();
+  // Fetch related videos (example logic, adjust table/columns as needed)
+  const { data: videos, error } = await supabase
+    .from('video_lessons')
+    .select('*')
+    .neq('id', currentVideoId) // Exclude current video
+    .limit(3); // Limit results
+
+  if (error) {
+    console.error('Error fetching related videos:', error);
+    return [];
+  }
+           
+  if (!Array.isArray(videos)) return [];
+
+  // If subject filtering needs to happen client-side based on title:
+  return videos
+    .filter(video => 
+      video.title.toLowerCase().includes(subject.toLowerCase())
+    )
+    .slice(0, 3); // Ensure limit if filtering client-side
+}
+
+// Define the page component as a regular function using standard Next.js patterns
+export default function Page({ params }: PageProps) {
+  // Placeholder content for now - to avoid fetch during build
+  const video = { id: params.id, title: 'Loading...', thumbnail: '', instructor: '', duration: '', description: '' };
+  const relatedVideos: any[] = [];
+
+  return (
+    <DashboardLayout>
+      <div className="py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="mb-4">
+            <Link 
+              href="/video" 
+              className="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-300 flex items-center"
+            >
+              <span className="mr-1">←</span> Back to video list
+            </Link>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
+            {/* Video player section - Use placeholder data */}
+            <div className="aspect-video relative bg-black">
+              {video.thumbnail && (
+                <Image
+                  src={video.thumbnail}
+                  alt={video.title}
+                  fill
+                  className="object-cover"
+                />
+              )}
+               <div className="absolute inset-0 flex items-center justify-center text-white">
+                (Video Player Placeholder)
+              </div>
+              <div className="absolute bottom-4 left-4 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm">
+                {video.instructor}
+              </div>
+              <div className="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm">
+                {video.duration}
+              </div>
+            </div>
+            
+            {/* Video info section */}
+            <div className="p-6">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                {video.title} (ID: {video.id})
+              </h1>
+              <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
+                <span className="mr-4">{video.instructor}</span>
+                <span>{video.duration}</span>
+              </div>
+              <div className="prose dark:prose-invert max-w-none">
+                <p>{video.description}</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Resources section */}
+          <div className="mt-8 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              Resources
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a 
+                href="#" 
+                className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                <div className="mr-4 text-primary-600 dark:text-primary-400 text-xl">
+                  📄
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-900 dark:text-white">
+                    Practice Worksheet
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    Download practice problems related to this lesson
+                  </p>
+                </div>
+              </a>
+              <a 
+                href="#" 
+                className="flex items-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                <div className="mr-4 text-primary-600 dark:text-primary-400 text-xl">
+                  📊
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-900 dark:text-white">
+                    Additional Examples
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    View more examples to reinforce your understanding
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+          
+          {/* Related videos section - Will be empty now */}
+          {relatedVideos.length > 0 && (
+            <div className="mt-8 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                Related Videos
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedVideos.map(relatedVideo => (
+                  <Link 
+                    key={relatedVideo.id} 
+                    href={`/video/${relatedVideo.id}`}
+                    className="block group"
+                  >
+                    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg overflow-hidden">
+                      <div className="relative aspect-video">
+                        <Image
+                          src={relatedVideo.thumbnail}
+                          alt={relatedVideo.title}
+                          fill
+                          className="object-cover group-hover:opacity-90 transition-opacity"
+                        />
+                        <div className="absolute bottom-2 right-2 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
+                          {relatedVideo.duration}
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                          {relatedVideo.title}
+                        </h3>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          {relatedVideo.instructor}
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </DashboardLayout>
+  )
+} 

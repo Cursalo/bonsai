@@ -1,0 +1,13 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/homework/page": "app/homework/page.js",
+  "/homework/new/page": "app/homework/new/page.js",
+  "/login/page": "app/login/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/page": "app/page.js",
+  "/register/page": "app/register/page.js",
+  "/subscription/page": "app/subscription/page.js",
+  "/progress/page": "app/progress/page.js",
+  "/video/page": "app/video/page.js",
+  "/video/[id]/page": "app/video/[id]/page.js"
+}
