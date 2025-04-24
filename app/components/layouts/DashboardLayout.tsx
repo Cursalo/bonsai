@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '../../../src/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import ThemeToggle from '../ThemeToggle'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
