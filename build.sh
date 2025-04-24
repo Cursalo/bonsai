@@ -2,9 +2,9 @@
 
 echo "Starting build process..."
 
-# Update pip
-echo "Updating pip..."
-pip install --upgrade pip
+# Skip pip update - no longer needed
+# echo "Updating pip..."
+# pip install --upgrade pip
 
 # Install npm dependencies with clean cache
 echo "Installing npm dependencies..."
