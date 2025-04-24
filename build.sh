@@ -23,4 +23,8 @@ npm run build
 echo "Verifying build output..."
 ls -la .next
 
+# Debug the publish directory setting
+echo "Debug: Checking publish directory setting"
+echo "NETLIFY_PUBLISH_DIR=.next"
+
 echo "Build process completed!" 

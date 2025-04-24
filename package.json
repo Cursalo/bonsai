@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postbuild": "echo 'Build completed. Output directory: .next'"
   },
   "keywords": [
     "education",
@@ -17,6 +18,9 @@
   ],
   "author": "",
   "license": "ISC",
+  "publishConfig": {
+    "directory": ".next"
+  },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^4.1.3",
