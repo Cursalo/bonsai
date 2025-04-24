@@ -3,8 +3,8 @@
   publish = ".next"
   
 [build.environment]
-  NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
-  NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key"
+  NEXT_PUBLIC_SUPABASE_URL = "https://tzekravlcxjpfeetbsfr.supabase.co"
+  NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6ZWtyYXZsY3hqcGZlZXRic2ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU1MDE1NjIsImV4cCI6MjA2MTA3NzU2Mn0.t1gqnRPUqXQpK62v0dA8"
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
 
