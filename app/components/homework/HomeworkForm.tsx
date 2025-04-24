@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { createSupabaseClient } from '@/app/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 
 const homeworkSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
@@ -30,7 +30,7 @@ export default function HomeworkForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
-  const supabase = createSupabaseClient()
+  const supabase = createClient()
   const [files, setFiles] = useState<File[]>([])
 
   const {
