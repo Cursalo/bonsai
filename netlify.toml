@@ -8,6 +8,10 @@
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
   PYTHON_VERSION = "3.9"
+  NPM_FLAGS = "--legacy-peer-deps"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs" 
+  package = "@netlify/plugin-nextjs"
+  
+[functions]
+  node_bundler = "esbuild" 

@@ -21,6 +21,10 @@
   "publishConfig": {
     "directory": ".next"
   },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^4.1.3",
