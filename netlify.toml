@@ -5,9 +5,8 @@
 [build.environment]
   NEXT_PUBLIC_SUPABASE_URL = "https://your-project.supabase.co"
   NEXT_PUBLIC_SUPABASE_ANON_KEY = "your-anon-key"
-
-[functions]
-  included_files = ["dist/server/**", "dist/_next/static/**"]
+  NEXT_USE_NETLIFY_EDGE = "true"
+  NODE_VERSION = "18"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs" 
